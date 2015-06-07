@@ -11,6 +11,13 @@ import time
 import logging
 import sys
 
+"""
+Bunch of constants
+"""
+
+TWITCH_USER = 'varrlo'      # your username on twitch, needed to get list of followed users
+REFRESH_TIME = 10           # after how many seconds do we check statuses again
+
 
 class TwitchChannelStatus:
     """
@@ -23,7 +30,7 @@ class TwitchChannelStatus:
 
         buffer = BytesIO()
         c = pycurl.Curl()
-        c.setopt(c.URL, 'https://api.twitch.tv/kraken/users/varrlo/follows/channels')
+        c.setopt(c.URL, 'https://api.twitch.tv/kraken/users/' + TWITCH_USER + '/follows/channels')
         c.setopt(c.WRITEDATA, buffer)
         c.perform()
         c.close()
@@ -108,8 +115,8 @@ def main():
     initialising everything
     press Ctr+C to terminate application
 
-    every 10 seconds threads are created, then they are checking channels
-    and after that they are terminated
+    every REFRESH_TIME seconds threads are created, then they check channels
+    and after that terminate threads
 
     """
     channel_watcher = TwitchChannelStatus()
@@ -124,7 +131,7 @@ def main():
             if t is main_thread:
                 continue
             t.join()
-        time.sleep(10)
+        time.sleep(REFRESH_TIME)
         count += 1
     return
 
