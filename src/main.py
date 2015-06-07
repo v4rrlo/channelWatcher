@@ -141,7 +141,7 @@ def main():
 
 
 if __name__ == '__main__':
-    logging.info('{} Getting started'.format(datetime.datetime.now().strftime('%Y-%m-%d')))
+    logging.info('{} Getting started'.format(datetime.datetime.now().strftime('%a %Y-%m-%d')))
     sys.stdout.write('Starting\n')
     main()
     sys.stdout.write('Goodbye\n')
