@@ -4,7 +4,7 @@ import json
 import logging
 import time
 import config
-
+import sys
 
 class Channel:
     """
@@ -59,7 +59,7 @@ class Channel:
                              .format(self.name, str(datetime.timedelta(seconds=self.totally_streamed))))
 
         sys.stdout.write(
-            '{}\t\t{}\t\t{}\t\t{}'.format(self.name, self.status, datetime.datetime.now(), self.viewers_count))
+            '{}\t\t{}\t\t{}\t\t{}\n'.format(self.name, self.status, datetime.datetime.now(), self.viewers_count))
 
     def get_status(self):
         return self.status
