@@ -58,8 +58,8 @@ class Channel:
                 logging.info('{} total streamed for {} hours'
                              .format(self.name, str(datetime.timedelta(seconds=self.totally_streamed))))
 
-        sys.stdout.write(
-            '{}\t\t{}\t\t{}\t\t{}\n'.format(self.name, self.status, datetime.datetime.now(), self.viewers_count))
+        # sys.stdout.write(
+        #     '{}\t\t{}\t\t{}\t\t{}\n'.format(self.name, self.status, datetime.datetime.now(), self.viewers_count))
 
     def get_status(self):
         return self.status

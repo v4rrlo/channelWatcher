@@ -5,7 +5,7 @@ import config
 import json
 import logging
 import time
-
+import dbmanager
 
 class ChannelWatcher:
     """
@@ -26,6 +26,8 @@ class ChannelWatcher:
         for channel_json in data['follows']:
             channel = Channel(channel_json)
             self.channels.append(channel)
+        self.manager = dbmanager.DBManager()
+        self.manager.create_logs_table()
 
     @staticmethod
     def run_jobs(jobs=[]):
