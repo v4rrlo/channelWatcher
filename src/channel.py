@@ -1,3 +1,4 @@
+import threading
 from urllib import request
 import datetime
 import json
@@ -5,6 +6,7 @@ import logging
 import time
 import config
 import sys
+
 
 class Channel:
     """
@@ -33,18 +35,16 @@ class Channel:
                 req.add_header("Client-ID", config.API_KEY)
                 resp = request.urlopen(req)
                 data = resp.read()
+                data_json = json.loads(data)
+                if data_json['stream']:
+                    result = 'online'
+                    self.viewers_count = data_json['stream']['viewers']
+                logging.info('Status of {} is {}'.format(self.name, result))
                 break
             except request.URLError:
                 logging.debug('Request for {} failed. Trying again.'.format(self.name))
                 time.sleep(5)
                 continue
-
-        data_json = json.loads(data)
-        if data_json['stream']:
-            result = 'online'
-            self.viewers_count = data_json['stream']['viewers']
-
-        logging.info('Status of {} is {}'.format(self.name, result))
 
         if self.has_status_changed(result):
             self.change_status(result)
@@ -58,8 +58,9 @@ class Channel:
                 logging.info('{} total streamed for {} hours'
                              .format(self.name, str(datetime.timedelta(seconds=self.totally_streamed))))
 
-        # sys.stdout.write(
-        #     '{}\t\t{}\t\t{}\t\t{}\n'.format(self.name, self.status, datetime.datetime.now(), self.viewers_count))
+        status = 1 if self.status == 'online' else 0
+
+        return self.name, status, str(datetime.datetime.now().replace(second=0, microsecond=0)).replace(':', '-'), self.viewers_count
 
     def get_status(self):
         return self.status

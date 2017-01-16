@@ -7,6 +7,7 @@ import logging
 import time
 import dbmanager
 
+
 class ChannelWatcher:
     """
     Main class which creates threads and initiate channels
@@ -26,17 +27,9 @@ class ChannelWatcher:
         for channel_json in data['follows']:
             channel = Channel(channel_json)
             self.channels.append(channel)
-        self.manager = dbmanager.DBManager()
-        self.manager.create_logs_table()
-
-    @staticmethod
-    def run_jobs(jobs=[]):
-        while True:
-            if not jobs:
-                return
-            for channel in jobs:
-                channel.check_status()
-            time.sleep(config.REFRESH_TIME)
+        manager = dbmanager.DBManager()
+        manager.create_logs_table()
+        manager.connection.close()
 
     def prepare_jobs(self):
         jobs = [[] for _ in range(config.NUMBER_OF_THREADS)]
@@ -47,6 +40,22 @@ class ChannelWatcher:
     def create_threads(self):
         jobs = self.prepare_jobs()
         for thread_no in range(config.NUMBER_OF_THREADS):
-            thread = threading.Thread(target=self.run_jobs, args=(jobs[thread_no],))
+            thread = WatcherThread(jobs[thread_no])
             self.threads.append(thread)
             thread.start()
+
+
+class WatcherThread(threading.Thread):
+    def __init__(self, jobs):
+        self.manager = dbmanager.DBManager()
+        self.jobs = jobs
+        super(WatcherThread, self).__init__()
+
+    def run(self):
+        while True:
+            if not self.jobs:
+                return
+            for channel in self.jobs:
+                name, status, timestamp, viewers = channel.check_status()
+                self.manager.insert_log(name, status, timestamp, viewers)
+            time.sleep(config.REFRESH_TIME)
