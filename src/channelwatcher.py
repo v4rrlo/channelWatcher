@@ -23,12 +23,14 @@ class ChannelWatcher:
         resp = request.urlopen(req)
         data = json.loads(resp.read())
 
+        manager = dbmanager.DBManager()
+        manager.create_logs_table()
+        manager.create_streamers_table()
         logging.info('There are {} channels you are following'.format(len(data['follows'])))
         for channel_json in data['follows']:
             channel = Channel(channel_json)
+            manager.insert_streamer(str(channel.name))
             self.channels.append(channel)
-        manager = dbmanager.DBManager()
-        manager.create_logs_table()
         manager.connection.close()
 
     def prepare_jobs(self):

@@ -1,11 +1,9 @@
-import threading
 from urllib import request
 import datetime
 import json
 import logging
 import time
 import config
-import sys
 
 
 class Channel:
@@ -60,7 +58,7 @@ class Channel:
 
         status = 1 if self.status == 'online' else 0
 
-        return self.name, status, str(datetime.datetime.now().replace(second=0, microsecond=0)).replace(':', '-'), self.viewers_count
+        return self.name, status, str(datetime.datetime.now().replace(microsecond=0)), self.viewers_count
 
     def get_status(self):
         return self.status

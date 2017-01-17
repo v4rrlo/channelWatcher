@@ -14,15 +14,13 @@ class DBManager:
             table_exists = cursor.execute('''SELECT name FROM sqlite_master WHERE type='table' AND name='logs';''')
             table_exists = table_exists.fetchone()
             if table_exists is None:
-                cursor.execute('''CREATE TABLE logs
-                        (streamer TEXT, status INT, timestamp TEXT, viewers INT )''')
+                cursor.execute('''CREATE TABLE logs (streamer TEXT, status INT, timestamp DATETIME, viewers INT )''')
             else:
                 return
 
     def insert_log(self, streamer_name, status, timestamp, viewers):
         with self.connection:
             cursor = self.connection.cursor()
-            print("INSERT INTO logs VALUES({}, {}, {}, {})".format(streamer_name, status, timestamp, viewers))
             cursor.execute('''INSERT INTO logs VALUES(?, ?, ?, ?)''', (streamer_name, status, str(timestamp), viewers))
 
     def create_streamers_table(self):
@@ -38,4 +36,4 @@ class DBManager:
     def insert_streamer(self, streamer_name):
         with self.connection:
             cursor = self.connection.cursor()
-            cursor.execute('''INSERT INTO streamers VALUES(?)''', streamer_name)
+            cursor.execute('''INSERT INTO streamers VALUES(?)''', (streamer_name,))
