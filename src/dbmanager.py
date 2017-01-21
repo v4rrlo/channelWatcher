@@ -70,7 +70,7 @@ class DBManager:
         return data
 
     def get_streamer_data_specific_date(self, name, date, end_date=None):
-        if end_date is None:
+        if end_date is None or end_date == '':
             end_date = date
             end_date = end_date[:-1] + str(int(date[-1]) + 1)
         data = []
