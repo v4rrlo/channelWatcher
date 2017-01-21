@@ -1,4 +1,7 @@
 .idea/*
 src/data.log
 src/config.py
-src/__pycache__/*
+.idea/
+database.db
+src/__pycache__/
+src/database.db
