@@ -9,3 +9,7 @@ Create config.py file with variables:
 * TWITCH_USER = 'varrlo'  - your username on twitch, needed to get list of followed users
 * REFRESH_TIME = 300      - after how many seconds do we check statuses again
 * NUMBER_OF_THREADS = 10  - number of threads running tasks
+
+How to run:
+* run.py to start webapp
+* main.py to start data-collecting application
