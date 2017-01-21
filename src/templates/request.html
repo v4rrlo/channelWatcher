@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var dps = {{ data|tojson }};
+            var datapoints = [];
+            for (i in dps) {
+                datapoints.push([ new Date(Date.parse(dps[i][0])), dps[i][1] ])
+            }
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Day');
+            data.addColumn('number', 'viewers');
+            data.addRows(datapoints);
+            var options = {
+                title: '{{streamer}}',
+                curveType: 'function'
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+    <div id="curve_chart" style="width: 100%; height: 500px"></div>
+    <form action="./request" method="POST">
+        <input type="text" name="streamer">
+        <input type="text" name="startdate">
+        <input type="text" name="enddate">
+        <input type="submit" name="my-form" value="Send">
+    </form>
+    <div>{{ streamer }}</div>
+    <div>{{ startdate }}</div>
+    <div>{{ enddate }}</div>
+</body>
+</html>

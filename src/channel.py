@@ -37,7 +37,7 @@ class Channel:
                 if data_json['stream']:
                     result = 'online'
                     self.viewers_count = data_json['stream']['viewers']
-                logging.info('Status of {} is {}'.format(self.name, result))
+                # logging.info('Status of {} is {}'.format(self.name, result))
                 break
             except request.URLError:
                 logging.debug('Request for {} failed. Trying again.'.format(self.name))
